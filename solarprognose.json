@@ -83,7 +83,7 @@
         "type": "function",
         "z": "27c7285378b4bf0f",
         "name": "function 4",
-        "func": "energy = parseFloat(msg.payload[1].split('kWh/qm')[0].replace(',', '.'))*9\n\n/*if (energy<10) {\n    msg.payload=70;\n} else if (energy<20) {\n    msg.payload=50;\n} else if (energy<30) {\n    msg.payload=35;\n} else if (energy>=30) {\n    msg.payload=20\n}*/\n\nmsg.payload = (energy - 7)/8\n\nreturn msg;",
+        "func": "// 65 = SolarflÃ¤che\n// 0.15 = Workingsgrad\nenergy = parseFloat(msg.payload[1].split('kWh/qm')[0].replace(',', '.'))*65*0.15\n\n/*if (energy<10) {\n    msg.payload=70;\n} else if (energy<20) {\n    msg.payload=50;\n} else if (energy<30) {\n    msg.payload=35;\n} else if (energy>=30) {\n    msg.payload=20\n}*/\n\nmsg.payload = (energy - 7)/8\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -203,7 +203,7 @@
                     "type": "enum",
                     "name": "Feed excess DC-coupled PV into grid",
                     "enum": {
-                        "0": "Don’t feed excess DC-tied PV into grid",
+                        "0": "Donâ€™t feed excess DC-tied PV into grid",
                         "1": "Feed excess DC-tied PV into the grid"
                     },
                     "writable": true
@@ -214,7 +214,7 @@
                     "name": "AC-coupled PV - grid feed in excess",
                     "enum": {
                         "0": "Feed excess AC-tied PV into grid",
-                        "1": "Don’t feed excess AC-tied PV into the grid"
+                        "1": "Donâ€™t feed excess AC-tied PV into the grid"
                     },
                     "writable": true
                 },
@@ -313,7 +313,7 @@
         "type": "function",
         "z": "27c7285378b4bf0f",
         "name": "function 5",
-        "func": "energy = parseFloat(msg.payload[1].split('kWh/qm')[0].replace(',', '.'))*9\n\nmsg.payload=energy\nreturn msg;",
+        "func": "// 65 = SolarflÃ¤che\n// 0.15 = Workingsgrad\nenergy = parseFloat(msg.payload[1].split('kWh/qm')[0].replace(',', '.'))*65*0.15\n\nmsg.payload=energy\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -433,7 +433,7 @@
                     "type": "enum",
                     "name": "Feed excess DC-coupled PV into grid",
                     "enum": {
-                        "0": "Don’t feed excess DC-tied PV into grid",
+                        "0": "Donâ€™t feed excess DC-tied PV into grid",
                         "1": "Feed excess DC-tied PV into the grid"
                     },
                     "writable": true
@@ -444,7 +444,7 @@
                     "name": "AC-coupled PV - grid feed in excess",
                     "enum": {
                         "0": "Feed excess AC-tied PV into grid",
-                        "1": "Don’t feed excess AC-tied PV into the grid"
+                        "1": "Donâ€™t feed excess AC-tied PV into the grid"
                     },
                     "writable": true
                 },
