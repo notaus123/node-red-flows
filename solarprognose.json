@@ -1,0 +1,729 @@
+[
+    {
+        "id": "27c7285378b4bf0f",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "8594b406c126ac1a",
+        "type": "http request",
+        "z": "27c7285378b4bf0f",
+        "name": "",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "https://www.proplanta.de/Wetter/Burgrieden-Wetter-Heute.html",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 230,
+        "y": 260,
+        "wires": [
+            [
+                "b84c7c936d56ede3"
+            ]
+        ]
+    },
+    {
+        "id": "d826d97d5d255ef9",
+        "type": "inject",
+        "z": "27c7285378b4bf0f",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 80,
+        "y": 260,
+        "wires": [
+            [
+                "8594b406c126ac1a"
+            ]
+        ]
+    },
+    {
+        "id": "b84c7c936d56ede3",
+        "type": "html",
+        "z": "27c7285378b4bf0f",
+        "name": "",
+        "property": "payload",
+        "outproperty": "payload",
+        "tag": "#GS td span",
+        "ret": "text",
+        "as": "single",
+        "x": 390,
+        "y": 260,
+        "wires": [
+            [
+                "3deb46677752b368"
+            ]
+        ]
+    },
+    {
+        "id": "3deb46677752b368",
+        "type": "function",
+        "z": "27c7285378b4bf0f",
+        "name": "function 4",
+        "func": "energy = parseFloat(msg.payload[1].split('kWh/qm')[0].replace(',', '.'))*9\n\n/*if (energy<10) {\n    msg.payload=70;\n} else if (energy<20) {\n    msg.payload=50;\n} else if (energy<30) {\n    msg.payload=35;\n} else if (energy>=30) {\n    msg.payload=20\n}*/\n\nmsg.payload = (energy - 7)/8\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 540,
+        "y": 260,
+        "wires": [
+            [
+                "e8a4a24b8b95b87d"
+            ]
+        ]
+    },
+    {
+        "id": "e8a4a24b8b95b87d",
+        "type": "debug",
+        "z": "27c7285378b4bf0f",
+        "name": "debug 5",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 700,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "9b859447b7be7dea",
+        "type": "victron-output-settings",
+        "z": "27c7285378b4bf0f",
+        "service": "com.victronenergy.settings",
+        "path": "/Settings/SystemSetup/MaxChargeCurrent",
+        "serviceObj": {
+            "service": "com.victronenergy.settings",
+            "name": "com.victronenergy.settings",
+            "paths": [
+                {
+                    "path": "/Settings/CGwacs/AcPowerSetPoint",
+                    "type": "float",
+                    "name": "ESS control loop setpoint (W)",
+                    "writable": true
+                },
+                {
+                    "path": "/Settings/CGwacs/BatteryLife/MinimumSocLimit",
+                    "type": "float",
+                    "name": "ESS Minimum SoC (unless grid fails) (%)",
+                    "writable": true
+                },
+                {
+                    "path": "/Settings/CGwacs/BatteryLife/State",
+                    "type": "enum",
+                    "name": "ESS BatteryLife state",
+                    "enum": {
+                        "0": "Unused, BL disabled",
+                        "1": "Restarting",
+                        "2": "Self-consumption",
+                        "3": "Self-consumption",
+                        "4": "Self-consumption",
+                        "5": "Discharge disabled",
+                        "6": "Force charge",
+                        "7": "Sustain",
+                        "8": "Low Soc Recharge",
+                        "9": "Keep batteries charged",
+                        "10": "BL Disabled",
+                        "11": "BL Disabled (Low SoC)",
+                        "12": "BL Disabled (Low SOC recharge)"
+                    },
+                    "writable": true
+                },
+                {
+                    "path": "/Settings/SystemSetup/MaxChargeCurrent",
+                    "type": "float",
+                    "name": "DVCC system max charge current (A DC)",
+                    "writable": true
+                },
+                {
+                    "path": "/Settings/CGwacs/Hub4Mode",
+                    "type": "enum",
+                    "name": "ESS Mode",
+                    "enum": {
+                        "1": "ESS with Phase Compensation",
+                        "2": "ESS without phase compensation",
+                        "3": "Disabled/External Control"
+                    },
+                    "writable": true
+                },
+                {
+                    "path": "/Settings/CGwacs/MaxChargePercentage",
+                    "type": "float",
+                    "name": "ESS max charge current (fractional) (%)",
+                    "writable": true
+                },
+                {
+                    "path": "/Settings/CGwacs/MaxDischargePercentage",
+                    "type": "float",
+                    "name": "ESS max discharge current (fractional) (%)",
+                    "writable": true
+                },
+                {
+                    "path": "/Settings/CGwacs/MaxDischargePower",
+                    "type": "float",
+                    "name": "ESS max discharge current (W)",
+                    "writable": true
+                },
+                {
+                    "path": "/Settings/CGwacs/MaxFeedInPower",
+                    "type": "float",
+                    "name": "Maximum System Grid Feed In (W)",
+                    "writable": true
+                },
+                {
+                    "path": "/Settings/CGwacs/OvervoltageFeedIn",
+                    "type": "enum",
+                    "name": "Feed excess DC-coupled PV into grid",
+                    "enum": {
+                        "0": "Don’t feed excess DC-tied PV into grid",
+                        "1": "Feed excess DC-tied PV into the grid"
+                    },
+                    "writable": true
+                },
+                {
+                    "path": "/Settings/CGwacs/PreventFeedback",
+                    "type": "enum",
+                    "name": "AC-coupled PV - grid feed in excess",
+                    "enum": {
+                        "0": "Feed excess AC-tied PV into grid",
+                        "1": "Don’t feed excess AC-tied PV into the grid"
+                    },
+                    "writable": true
+                },
+                {
+                    "path": "/Settings/SystemSetup/MaxChargeVoltage",
+                    "type": "float",
+                    "name": "Limit managed battery voltage (V DC)",
+                    "writable": true
+                }
+            ]
+        },
+        "pathObj": {
+            "path": "/Settings/SystemSetup/MaxChargeCurrent",
+            "type": "float",
+            "name": "DVCC system max charge current (A DC)",
+            "writable": true
+        },
+        "name": "",
+        "x": 810,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "efd6f35e3ee8e1c8",
+        "type": "http request",
+        "z": "27c7285378b4bf0f",
+        "name": "",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "https://www.proplanta.de/Wetter/Burgrieden-Wetter-Morgen.html",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 230,
+        "y": 340,
+        "wires": [
+            [
+                "e8a57f5729bc3f3b"
+            ]
+        ]
+    },
+    {
+        "id": "dc0c18ca3255cdf0",
+        "type": "inject",
+        "z": "27c7285378b4bf0f",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 80,
+        "y": 340,
+        "wires": [
+            [
+                "efd6f35e3ee8e1c8"
+            ]
+        ]
+    },
+    {
+        "id": "e8a57f5729bc3f3b",
+        "type": "html",
+        "z": "27c7285378b4bf0f",
+        "name": "",
+        "property": "payload",
+        "outproperty": "payload",
+        "tag": "#GS td span",
+        "ret": "text",
+        "as": "single",
+        "x": 390,
+        "y": 340,
+        "wires": [
+            [
+                "8305458655a6946a"
+            ]
+        ]
+    },
+    {
+        "id": "8305458655a6946a",
+        "type": "function",
+        "z": "27c7285378b4bf0f",
+        "name": "function 5",
+        "func": "energy = parseFloat(msg.payload[1].split('kWh/qm')[0].replace(',', '.'))*9\n\nmsg.payload=energy\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 540,
+        "y": 340,
+        "wires": [
+            [
+                "c39b321be3d7bdbe"
+            ]
+        ]
+    },
+    {
+        "id": "c39b321be3d7bdbe",
+        "type": "debug",
+        "z": "27c7285378b4bf0f",
+        "name": "debug 6",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 700,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "8cbeb0993f3dfbaf",
+        "type": "victron-output-settings",
+        "z": "27c7285378b4bf0f",
+        "service": "com.victronenergy.settings",
+        "path": "/Settings/CGwacs/BatteryLife/MinimumSocLimit",
+        "serviceObj": {
+            "service": "com.victronenergy.settings",
+            "name": "com.victronenergy.settings",
+            "paths": [
+                {
+                    "path": "/Settings/CGwacs/AcPowerSetPoint",
+                    "type": "float",
+                    "name": "ESS control loop setpoint (W)",
+                    "writable": true
+                },
+                {
+                    "path": "/Settings/CGwacs/BatteryLife/MinimumSocLimit",
+                    "type": "float",
+                    "name": "ESS Minimum SoC (unless grid fails) (%)",
+                    "writable": true
+                },
+                {
+                    "path": "/Settings/CGwacs/BatteryLife/State",
+                    "type": "enum",
+                    "name": "ESS BatteryLife state",
+                    "enum": {
+                        "0": "Unused, BL disabled",
+                        "1": "Restarting",
+                        "2": "Self-consumption",
+                        "3": "Self-consumption",
+                        "4": "Self-consumption",
+                        "5": "Discharge disabled",
+                        "6": "Force charge",
+                        "7": "Sustain",
+                        "8": "Low Soc Recharge",
+                        "9": "Keep batteries charged",
+                        "10": "BL Disabled",
+                        "11": "BL Disabled (Low SoC)",
+                        "12": "BL Disabled (Low SOC recharge)"
+                    },
+                    "writable": true
+                },
+                {
+                    "path": "/Settings/SystemSetup/MaxChargeCurrent",
+                    "type": "float",
+                    "name": "DVCC system max charge current (A DC)",
+                    "writable": true
+                },
+                {
+                    "path": "/Settings/CGwacs/Hub4Mode",
+                    "type": "enum",
+                    "name": "ESS Mode",
+                    "enum": {
+                        "1": "ESS with Phase Compensation",
+                        "2": "ESS without phase compensation",
+                        "3": "Disabled/External Control"
+                    },
+                    "writable": true
+                },
+                {
+                    "path": "/Settings/CGwacs/MaxChargePercentage",
+                    "type": "float",
+                    "name": "ESS max charge current (fractional) (%)",
+                    "writable": true
+                },
+                {
+                    "path": "/Settings/CGwacs/MaxDischargePercentage",
+                    "type": "float",
+                    "name": "ESS max discharge current (fractional) (%)",
+                    "writable": true
+                },
+                {
+                    "path": "/Settings/CGwacs/MaxDischargePower",
+                    "type": "float",
+                    "name": "ESS max discharge current (W)",
+                    "writable": true
+                },
+                {
+                    "path": "/Settings/CGwacs/MaxFeedInPower",
+                    "type": "float",
+                    "name": "Maximum System Grid Feed In (W)",
+                    "writable": true
+                },
+                {
+                    "path": "/Settings/CGwacs/OvervoltageFeedIn",
+                    "type": "enum",
+                    "name": "Feed excess DC-coupled PV into grid",
+                    "enum": {
+                        "0": "Don’t feed excess DC-tied PV into grid",
+                        "1": "Feed excess DC-tied PV into the grid"
+                    },
+                    "writable": true
+                },
+                {
+                    "path": "/Settings/CGwacs/PreventFeedback",
+                    "type": "enum",
+                    "name": "AC-coupled PV - grid feed in excess",
+                    "enum": {
+                        "0": "Feed excess AC-tied PV into grid",
+                        "1": "Don’t feed excess AC-tied PV into the grid"
+                    },
+                    "writable": true
+                },
+                {
+                    "path": "/Settings/SystemSetup/MaxChargeVoltage",
+                    "type": "float",
+                    "name": "Limit managed battery voltage (V DC)",
+                    "writable": true
+                }
+            ]
+        },
+        "pathObj": {
+            "path": "/Settings/CGwacs/BatteryLife/MinimumSocLimit",
+            "type": "float",
+            "name": "ESS Minimum SoC (unless grid fails) (%)",
+            "writable": true
+        },
+        "name": "",
+        "x": 810,
+        "y": 540,
+        "wires": []
+    },
+    {
+        "id": "12a4cd11baaadc1b",
+        "type": "debug",
+        "z": "27c7285378b4bf0f",
+        "name": "debug 7",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 740,
+        "y": 660,
+        "wires": []
+    },
+    {
+        "id": "e9e090537adb614c",
+        "type": "victron-input-battery",
+        "z": "27c7285378b4bf0f",
+        "service": "com.victronenergy.battery.socketcan_can0",
+        "path": "/Soc",
+        "serviceObj": {
+            "service": "com.victronenergy.battery.socketcan_can0",
+            "name": "Pylontech 3000C 7kwh",
+            "paths": [
+                {
+                    "path": "/Alarms/CellImbalance",
+                    "type": "enum",
+                    "name": "Cell Imbalance alarm",
+                    "enum": {
+                        "0": "No alarm",
+                        "1": "Warning",
+                        "2": "Alarm"
+                    }
+                },
+                {
+                    "path": "/Alarms/HighChargeCurrent",
+                    "type": "enum",
+                    "name": "High charge current alarm",
+                    "enum": {
+                        "0": "No alarm",
+                        "1": "Warning",
+                        "2": "Alarm"
+                    }
+                },
+                {
+                    "path": "/Alarms/HighChargeTemperature",
+                    "type": "enum",
+                    "name": "High charge temperature alarm",
+                    "enum": {
+                        "0": "No alarm",
+                        "1": "Warning",
+                        "2": "Alarm"
+                    }
+                },
+                {
+                    "path": "/Alarms/HighDischargeCurrent",
+                    "type": "enum",
+                    "name": "High discharge current alarm",
+                    "enum": {
+                        "0": "No alarm",
+                        "1": "Warning",
+                        "2": "Alarm"
+                    }
+                },
+                {
+                    "path": "/Alarms/HighTemperature",
+                    "type": "enum",
+                    "name": "High battery temperature alarm",
+                    "enum": {
+                        "0": "No alarm",
+                        "2": "Alarm"
+                    }
+                },
+                {
+                    "path": "/Alarms/HighVoltage",
+                    "type": "enum",
+                    "name": "High voltage alarm",
+                    "enum": {
+                        "0": "No alarm",
+                        "2": "Alarm"
+                    }
+                },
+                {
+                    "path": "/Alarms/InternalFailure",
+                    "type": "enum",
+                    "name": "Internal error alarm",
+                    "enum": {
+                        "0": "No alarm",
+                        "1": "Warning",
+                        "2": "Alarm"
+                    }
+                },
+                {
+                    "path": "/Alarms/LowChargeTemperature",
+                    "type": "enum",
+                    "name": "Low charge temperature alarm",
+                    "enum": {
+                        "0": "No alarm",
+                        "1": "Warning",
+                        "2": "Alarm"
+                    }
+                },
+                {
+                    "path": "/Alarms/LowTemperature",
+                    "type": "enum",
+                    "name": "Low battery temperature alarm",
+                    "enum": {
+                        "0": "No alarm",
+                        "2": "Alarm"
+                    }
+                },
+                {
+                    "path": "/Alarms/LowVoltage",
+                    "type": "enum",
+                    "name": "Low voltage alarm",
+                    "enum": {
+                        "0": "No alarm",
+                        "2": "Alarm"
+                    }
+                },
+                {
+                    "path": "/Capacity",
+                    "type": "float",
+                    "name": "Capacity (Ah)"
+                },
+                {
+                    "path": "/Dc/0/Current",
+                    "type": "float",
+                    "name": "Current (A)"
+                },
+                {
+                    "path": "/Dc/0/Temperature",
+                    "type": "float",
+                    "name": "Battery temperature (C)"
+                },
+                {
+                    "path": "/Dc/0/Voltage",
+                    "type": "float",
+                    "name": "Voltage (V)"
+                },
+                {
+                    "path": "/History/ChargedEnergy",
+                    "type": "float",
+                    "name": "Charged Energy (kWh)"
+                },
+                {
+                    "path": "/History/DischargedEnergy",
+                    "type": "float",
+                    "name": "Discharged Energy (kWh)"
+                },
+                {
+                    "path": "/Info/BatteryLowVoltage",
+                    "type": "float",
+                    "name": "Min discharge voltage (V DC)"
+                },
+                {
+                    "path": "/Info/MaxChargeCurrent",
+                    "type": "float",
+                    "name": "CCL - Charge Current Limit (A)"
+                },
+                {
+                    "path": "/Info/MaxChargeVoltage",
+                    "type": "float",
+                    "name": "CVL - Charge Voltage Limit (V)"
+                },
+                {
+                    "path": "/Info/MaxDischargeCurrent",
+                    "type": "float",
+                    "name": "DCL - Discharge Current Limit (A)"
+                },
+                {
+                    "path": "/Soc",
+                    "type": "float",
+                    "name": "State of charge (%)"
+                },
+                {
+                    "path": "/Soh",
+                    "type": "float",
+                    "name": "State of health (%)"
+                },
+                {
+                    "path": "/System/MaxVoltageCellId",
+                    "type": "string",
+                    "name": "System; ID of module with highest cell voltage"
+                },
+                {
+                    "path": "/System/MaxCellTemperature",
+                    "type": "float",
+                    "name": "Maximum cell temperature (Degrees celsius)"
+                },
+                {
+                    "path": "/System/MaxCellVoltage",
+                    "type": "float",
+                    "name": "System; maximum cell voltage (V DC)"
+                },
+                {
+                    "path": "/System/MaxTemperatureCellId",
+                    "type": "string",
+                    "name": "System; ID of module with highest cell temperature"
+                },
+                {
+                    "path": "/System/MinVoltageCellId",
+                    "type": "string",
+                    "name": "System; ID of module with lowest cell voltage"
+                },
+                {
+                    "path": "/System/MinCellTemperature",
+                    "type": "float",
+                    "name": "Minimum cell temperature (Degrees celsius)"
+                },
+                {
+                    "path": "/System/MinCellVoltage",
+                    "type": "float",
+                    "name": "System; minimum cell voltage (V DC)"
+                },
+                {
+                    "path": "/System/MinTemperatureCellId",
+                    "type": "string",
+                    "name": "System; ID of module with lowest cell temperature"
+                },
+                {
+                    "path": "/System/NrOfModulesBlockingCharge",
+                    "type": "integer",
+                    "name": "Number of modules blocking charge"
+                },
+                {
+                    "path": "/System/NrOfModulesBlockingDischarge",
+                    "type": "integer",
+                    "name": "Number of modules blocking discharge"
+                },
+                {
+                    "path": "/System/NrOfModulesOffline",
+                    "type": "integer",
+                    "name": "Number of offline modules"
+                },
+                {
+                    "path": "/System/NrOfModulesOnline",
+                    "type": "integer",
+                    "name": "Number of online modules"
+                }
+            ]
+        },
+        "pathObj": {
+            "path": "/Soc",
+            "type": "float",
+            "name": "State of charge (%)"
+        },
+        "initial": "",
+        "name": "",
+        "x": 410,
+        "y": 660,
+        "wires": [
+            [
+                "12a4cd11baaadc1b"
+            ]
+        ]
+    }
+]
