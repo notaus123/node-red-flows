@@ -23,8 +23,8 @@
         "authType": "",
         "senderr": false,
         "headers": [],
-        "x": 230,
-        "y": 260,
+        "x": 250,
+        "y": 700,
         "wires": [
             [
                 "b84c7c936d56ede3"
@@ -52,8 +52,8 @@
         "topic": "",
         "payload": "",
         "payloadType": "date",
-        "x": 80,
-        "y": 260,
+        "x": 100,
+        "y": 700,
         "wires": [
             [
                 "8594b406c126ac1a"
@@ -70,8 +70,8 @@
         "tag": "#GS td span",
         "ret": "text",
         "as": "single",
-        "x": 390,
-        "y": 260,
+        "x": 410,
+        "y": 700,
         "wires": [
             [
                 "3deb46677752b368"
@@ -82,15 +82,15 @@
         "id": "3deb46677752b368",
         "type": "function",
         "z": "27c7285378b4bf0f",
-        "name": "function 4",
-        "func": "// 65 = Solarfläche\n// 0.15 = Workingsgrad\nenergy = parseFloat(msg.payload[1].split('kWh/qm')[0].replace(',', '.'))*65*0.15\n\n/*if (energy<10) {\n    msg.payload=70;\n} else if (energy<20) {\n    msg.payload=50;\n} else if (energy<30) {\n    msg.payload=35;\n} else if (energy>=30) {\n    msg.payload=20\n}*/\n\nmsg.payload = (energy - 7)/8\n\nreturn msg;",
+        "name": "PV Today",
+        "func": "// 65 = Solarfläche\n// 0.15 = Workingsgrad\nflow.set(\"pv_today\",parseFloat(msg.payload[1].split('kWh/qm')[0].replace(',', '.'))*65*0.11)\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 540,
-        "y": 260,
+        "x": 560,
+        "y": 700,
         "wires": [
             [
                 "e8a4a24b8b95b87d"
@@ -110,14 +110,15 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 700,
-        "y": 260,
+        "x": 780,
+        "y": 700,
         "wires": []
     },
     {
         "id": "9b859447b7be7dea",
         "type": "victron-output-settings",
         "z": "27c7285378b4bf0f",
+        "d": true,
         "service": "com.victronenergy.settings",
         "path": "/Settings/SystemSetup/MaxChargeCurrent",
         "serviceObj": {
@@ -233,8 +234,8 @@
             "writable": true
         },
         "name": "",
-        "x": 810,
-        "y": 460,
+        "x": 650,
+        "y": 760,
         "wires": []
     },
     {
@@ -253,8 +254,8 @@
         "authType": "",
         "senderr": false,
         "headers": [],
-        "x": 230,
-        "y": 340,
+        "x": 430,
+        "y": 220,
         "wires": [
             [
                 "e8a57f5729bc3f3b"
@@ -282,8 +283,8 @@
         "topic": "",
         "payload": "",
         "payloadType": "date",
-        "x": 80,
-        "y": 340,
+        "x": 160,
+        "y": 260,
         "wires": [
             [
                 "efd6f35e3ee8e1c8"
@@ -300,8 +301,8 @@
         "tag": "#GS td span",
         "ret": "text",
         "as": "single",
-        "x": 390,
-        "y": 340,
+        "x": 590,
+        "y": 220,
         "wires": [
             [
                 "8305458655a6946a"
@@ -312,18 +313,19 @@
         "id": "8305458655a6946a",
         "type": "function",
         "z": "27c7285378b4bf0f",
-        "name": "function 5",
-        "func": "// 65 = Solarfläche\n// 0.15 = Workingsgrad\nenergy = parseFloat(msg.payload[1].split('kWh/qm')[0].replace(',', '.'))*65*0.15\n\nmsg.payload=energy\nreturn msg;",
+        "name": "PV Tomorrow",
+        "func": "// 65 = Solarfläche\n// 0.15 = Workingsgrad\nflow.set(\"pv_tomorrow\",parseFloat(msg.payload[1].split('kWh/qm')[0].replace(',', '.'))*65*0.11)\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 540,
-        "y": 340,
+        "x": 760,
+        "y": 220,
         "wires": [
             [
-                "c39b321be3d7bdbe"
+                "c39b321be3d7bdbe",
+                "338f84b5c65f2f99"
             ]
         ]
     },
@@ -340,8 +342,8 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 700,
-        "y": 340,
+        "x": 960,
+        "y": 220,
         "wires": []
     },
     {
@@ -463,30 +465,15 @@
             "writable": true
         },
         "name": "",
-        "x": 810,
-        "y": 540,
-        "wires": []
-    },
-    {
-        "id": "12a4cd11baaadc1b",
-        "type": "debug",
-        "z": "27c7285378b4bf0f",
-        "name": "debug 7",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 740,
-        "y": 660,
+        "x": 950,
+        "y": 340,
         "wires": []
     },
     {
         "id": "e9e090537adb614c",
         "type": "victron-input-battery",
         "z": "27c7285378b4bf0f",
+        "d": true,
         "service": "com.victronenergy.battery.socketcan_can0",
         "path": "/Soc",
         "serviceObj": {
@@ -718,11 +705,359 @@
         },
         "initial": "",
         "name": "",
-        "x": 410,
-        "y": 660,
+        "x": 190,
+        "y": 760,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "68a12d3f300b34e5",
+        "type": "sunrise",
+        "z": "27c7285378b4bf0f",
+        "name": "",
+        "lat": "48.23943",
+        "lon": "9.93417",
+        "start": "goldenHourEnd",
+        "end": "goldenHour",
+        "soff": "30",
+        "eoff": "-30",
+        "x": 150,
+        "y": 120,
+        "wires": [
+            [],
+            [
+                "c5051da42fcc79d6"
+            ]
+        ]
+    },
+    {
+        "id": "c5051da42fcc79d6",
+        "type": "switch",
+        "z": "27c7285378b4bf0f",
+        "name": "",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "1",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "0",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 390,
+        "y": 120,
         "wires": [
             [
-                "12a4cd11baaadc1b"
+                "db8c8875ae01ee0e"
+            ],
+            [
+                "efd6f35e3ee8e1c8"
+            ]
+        ]
+    },
+    {
+        "id": "db8c8875ae01ee0e",
+        "type": "function",
+        "z": "27c7285378b4bf0f",
+        "name": "Sunrise",
+        "func": "flow.set('sunrise',Date.now());\nflow.set('energy_sunrise',flow.get('energy_now'));\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 620,
+        "y": 60,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "5df32e136347813c",
+        "type": "victron-input-pvinverter",
+        "z": "27c7285378b4bf0f",
+        "service": "com.victronenergy.pvinverter.http_20",
+        "path": "/Ac/Energy/Forward",
+        "serviceObj": {
+            "service": "com.victronenergy.pvinverter.http_20",
+            "name": "SolarLog500",
+            "paths": [
+                {
+                    "path": "/Ac/Energy/Forward",
+                    "type": "float",
+                    "name": "Total energy (kWh)"
+                },
+                {
+                    "path": "/Ac/L1/Current",
+                    "type": "float",
+                    "name": "L1 Current (A)"
+                },
+                {
+                    "path": "/Ac/L1/Energy/Forward",
+                    "type": "float",
+                    "name": "L1 Energy (kWh)"
+                },
+                {
+                    "path": "/Ac/L1/Power",
+                    "type": "float",
+                    "name": "L1 Power (W)"
+                },
+                {
+                    "path": "/Ac/L1/Voltage",
+                    "type": "float",
+                    "name": "L1 Voltage (V)"
+                },
+                {
+                    "path": "/Ac/L2/Current",
+                    "type": "float",
+                    "name": "L2 Current (A)"
+                },
+                {
+                    "path": "/Ac/L2/Energy/Forward",
+                    "type": "float",
+                    "name": "L2 Energy (kWh)"
+                },
+                {
+                    "path": "/Ac/L2/Power",
+                    "type": "float",
+                    "name": "L2 Power (W)"
+                },
+                {
+                    "path": "/Ac/L2/Voltage",
+                    "type": "float",
+                    "name": "L2 Voltage (V)"
+                },
+                {
+                    "path": "/Ac/L3/Current",
+                    "type": "float",
+                    "name": "L3 Current (A)"
+                },
+                {
+                    "path": "/Ac/L3/Energy/Forward",
+                    "type": "float",
+                    "name": "L3 Energy (kWh)"
+                },
+                {
+                    "path": "/Ac/L3/Power",
+                    "type": "float",
+                    "name": "L3 Power (W)"
+                },
+                {
+                    "path": "/Ac/L3/Voltage",
+                    "type": "float",
+                    "name": "L3 Voltage (V)"
+                },
+                {
+                    "path": "/Ac/Power",
+                    "type": "float",
+                    "name": "Total Power (W)"
+                },
+                {
+                    "path": "/Position",
+                    "type": "enum",
+                    "name": "Position",
+                    "enum": {
+                        "0": "AC input 1",
+                        "1": "AC output",
+                        "2": "AC input 2"
+                    }
+                },
+                {
+                    "path": "/Serial",
+                    "type": "string",
+                    "name": "Serial"
+                },
+                {
+                    "path": "/StatusCode",
+                    "type": "enum",
+                    "name": "Status",
+                    "enum": {
+                        "0": "Startup 0",
+                        "1": "Startup 1",
+                        "2": "Startup 2",
+                        "3": "Startup 3",
+                        "4": "Startup 4",
+                        "5": "Startup 5",
+                        "6": "Startup 6",
+                        "7": "Running",
+                        "8": "Standby",
+                        "9": "Boot loading",
+                        "10": "Error",
+                        "11": "Running (MPPT)",
+                        "12": "Running (Throttled)"
+                    }
+                }
+            ]
+        },
+        "pathObj": {
+            "path": "/Ac/Energy/Forward",
+            "type": "float",
+            "name": "Total energy (kWh)"
+        },
+        "name": "",
+        "x": 150,
+        "y": 620,
+        "wires": [
+            [
+                "46448bc5cd1e2344"
+            ]
+        ]
+    },
+    {
+        "id": "46448bc5cd1e2344",
+        "type": "function",
+        "z": "27c7285378b4bf0f",
+        "name": "Energy Now",
+        "func": "flow.set('energy_now',msg.payload);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 410,
+        "y": 620,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "338f84b5c65f2f99",
+        "type": "function",
+        "z": "27c7285378b4bf0f",
+        "name": "Sunset",
+        "func": "// capa capacity of battery\ncapa = 7.104;\n\n// minimum system soc\nsyssoc = 10;\n\n// get time of sunset\nflow.set('sunset',Date.now());\n\n// daylength = length of current day in hours\nflow.set('daylength',(flow.get('sunset')-flow.get('sunrise')) / 3600000);\n\n// get energy counter sunset\nflow.set('energy_sunset',flow.get('energy_now'));\n\n// set energy consumption during solar production\nflow.set('energy_day',(flow.get('energy_sunset')-flow.get('energy_sunrise')));\n\nladung = (flow.get('pv_tomorrow')-flow.get('energy_day'));\n\nminsoc = (1-((ladung*0.90) / capa))*100;\n\nif (minsoc<=syssoc) {\n    msg.payload = syssoc;\n} else {\n    msg.payload = Math.round(minsoc/5)*5;\n}\nflow.set('minsoc',minsoc);\nflow.set('ladung',ladung);\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 600,
+        "y": 340,
+        "wires": [
+            [
+                "8cbeb0993f3dfbaf"
+            ]
+        ]
+    },
+    {
+        "id": "c42f763f1da8d4b9",
+        "type": "inject",
+        "z": "27c7285378b4bf0f",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 440,
+        "y": 480,
+        "wires": [
+            [
+                "d821e62a5e88eecd"
+            ]
+        ]
+    },
+    {
+        "id": "d821e62a5e88eecd",
+        "type": "function",
+        "z": "27c7285378b4bf0f",
+        "name": "Set SOC 10",
+        "func": "msg.payload = 10;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 610,
+        "y": 480,
+        "wires": [
+            [
+                "8cbeb0993f3dfbaf"
+            ]
+        ]
+    },
+    {
+        "id": "4bbec67404066a5f",
+        "type": "debug",
+        "z": "27c7285378b4bf0f",
+        "name": "Allout",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1030,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "b7c66d7faffdcdfb",
+        "type": "inject",
+        "z": "27c7285378b4bf0f",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 820,
+        "y": 40,
+        "wires": [
+            [
+                "d0970be7e60ead3b"
+            ]
+        ]
+    },
+    {
+        "id": "d0970be7e60ead3b",
+        "type": "function",
+        "z": "27c7285378b4bf0f",
+        "name": "All Flow Out",
+        "func": "msg.sunset = flow.get('sunset');\nmsg.sunrise = flow.get('sunrise');\nmsg.daylength = flow.get('daylength');\nmsg.energy_sunset = flow.get('energy_sunset');\nmsg.energy_sunrise = flow.get('energy_sunrise');\nmsg.energy_now = flow.get('energy_now');\nmsg.energy_day = flow.get('energy_day');\nmsg.minsoc = flow.get('minsoc');\nmsg.ladung = flow.get('ladung');\nmsg.pv_today = flow.get('pv_today');\nmsg.pv_tomorrow = flow.get('pv_tomorrow');\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 890,
+        "y": 140,
+        "wires": [
+            [
+                "4bbec67404066a5f"
             ]
         ]
     }
